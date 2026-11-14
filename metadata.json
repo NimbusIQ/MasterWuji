@@ -1,0 +1,12 @@
+{
+  "description": "Master Wuji -  Holistic Health & Advanced GenAI Hub",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation",
+    "camera"
+  ],
+  "name": "Master Wuji v26",
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

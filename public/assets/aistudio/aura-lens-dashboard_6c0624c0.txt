@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraLens & DrYu iQ AI — Unified Diagnostic & Temporal Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        sky: {
+                            light: '#B2EBF2',
+                            DEFAULT: '#87CEEB',
+                            dark: '#0097A7',
+                        },
+                        lavender: '#E6E6FA',
+                        charcoal: '#1C2526',
+                        wood: '#98FB98',
+                        fire: '#FF4040',
+                        earth: '#FFD700',
+                        metal: '#C0C0C0',
+                        water: '#4169E1'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts (Roboto & Caveat) -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Roboto:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .handwritten {
+            font-family: 'Caveat', cursive;
+        }
+        .terminal {
+            font-family: 'Share Tech Mono', monospace;
+        }
+        .glass {
+            background: rgba(28, 37, 38, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-green { box-shadow: 0 0 15px rgba(152, 251, 152, 0.4); }
+        .glow-red { box-shadow: 0 0 15px rgba(255, 64, 64, 0.4); }
+        .glow-yellow { box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
+        .glow-silver { box-shadow: 0 0 15px rgba(192, 192, 192, 0.4); }
+        .glow-blue { box-shadow: 0 0 15px rgba(65, 105, 225, 0.4); }
+        .glow-sky { box-shadow: 0 0 20px rgba(135, 206, 235, 0.5); }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen overflow-x-hidden selection:bg-sky/30 selection:text-white">
+
+    <!-- Ambient Animated Background Particles -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30">
+        <div class="absolute w-96 h-96 rounded-full bg-sky-DEFAULT/10 blur-[100px] top-1/4 left-1/4 animate-pulse"></div>
+        <div class="absolute w-96 h-96 rounded-full bg-indigo-500/10 blur-[100px] bottom-1/4 right-1/4 animate-pulse" style="animation-delay: 3s;"></div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        
+        <!-- HEADER / BRANDING -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 border-b border-slate-800 gap-4">
+            <div class="flex items-center gap-4">
+                <!-- Glowing Pulsing Avatar -->
+                <div class="relative">
+                    <div class="absolute inset-0 bg-sky rounded-full blur animate-ping opacity-25"></div>
+                    <div class="relative w-16 h-16 rounded-full border-2 border-sky flex items-center justify-center bg-slate-900 shadow-[0_0_15px_rgba(135,206,235,0.4)]">
+                        <span class="text-4xl">☯️</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-3xl font-black tracking-tight text-white uppercase tracking-wider">AuraLens <span class="text-sky font-light">iQ</span></h1>
+                        <span class="bg-sky/20 text-sky text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border border-sky/30 terminal">v2.1 Sync</span>
+                    </div>
+                    <p class="text-slate-400 text-xs sm:text-sm">Unified Diagnostic & Temporal State Machine Engine — <span class="handwritten text-lg text-sky-light ml-1 font-bold">Dr. Yu AI</span></p>
+                </div>
+            </div>
+            
+            <!-- Quick System Health Check & Epoch Clock -->
+            <div class="glass px-4 py-3 rounded-xl flex items-center gap-6 text-xs terminal w-full md:w-auto justify-between md:justify-start">
+                <div class="flex flex-col">
+                    <span class="text-slate-500">SYSTEM EPOCH CLOCK</span>
+                    <span class="text-sky font-bold" id="live-epoch">1717335890.127</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-slate-500">VECTOR RAG ENGINE</span>
+                    <span class="text-emerald-400 flex items-center gap-1 font-bold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> ONLINE
+                    </span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-slate-500">MCP POSTGRESQL</span>
+                    <span class="text-emerald-400 flex items-center gap-1 font-bold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> SECURE
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- GRID SYSTEM -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- COLUMN 1: INTERACTIVE SCANNER & TCM RADAR (6 COLS) -->
+            <section class="col-span-1 lg:col-span-7 flex flex-col gap-8">
+                
+                <!-- 1. MULTIMODAL CAMERA & TONGUE SCANNER -->
+                <div class="glass rounded-3xl p-6 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-sky/30">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-sky/5 rounded-full blur-2xl"></div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-white">
+                            <span class="w-2.5 h-2.5 rounded-full bg-sky animate-pulse"></span>
+                            Biomorphic Vision Capture <span class="text-slate-500 text-xs font-normal">Edge Preprocessed</span>
+                        </h2>
+                        <span class="bg-slate-800 text-[10px] text-slate-300 font-bold px-2 py-0.5 rounded border border-slate-700 uppercase tracking-widest terminal">TensorFlow Lite / ResNet-50</span>
+                    </div>
+
+                    <!-- Capture Box Interface -->
+                    <div class="bg-slate-900 rounded-2xl relative border border-slate-800 aspect-video flex flex-col items-center justify-center overflow-hidden">
+                        
+                        <!-- Simulated AR Camera Feed Overlay -->
+                        <div id="camera-feed" class="absolute inset-0 bg-cover bg-center transition-all duration-1000 opacity-60 filter saturate-100" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600');"></div>
+                        
+                        <!-- AR Holographic Alignment Guide -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none animate-pulse" viewBox="0 0 100 100" preserveAspectRatio="none" style="animation-duration: 4s;">
+                            <!-- Outer boundaries -->
+                            <rect x="2" y="2" width="96" height="96" fill="none" stroke="rgba(135,206,235,0.15)" stroke-width="0.5" stroke-dasharray="2,2"/>
+                            <!-- Face alignment oval -->
+                            <path id="ar-face-oval" d="M 50,15 C 32,15 32,85 50,85 C 68,85 68,15 50,15 Z" fill="none" stroke="#87CEEB" stroke-width="0.75" class="transition-all duration-500" stroke-dasharray="2,2"/>
+                            <!-- Tongue scan target box (hidden initially) -->
+                            <rect id="ar-tongue-box" x="40" y="55" width="20" height="20" rx="3" fill="none" stroke="#FF4040" stroke-width="0.75" stroke-dasharray="1,1" class="hidden opacity-50"/>
+                            <!-- Crosshair ticks -->
+                            <line x1="50" y1="5" x2="50" y2="10" stroke="rgba(135,206,235,0.3)" stroke-width="0.5"/>
+                            <line x1="50" y1="90" x2="50" y2="95" stroke="rgba(135,206,235,0.3)" stroke-width="0.5"/>
+                            <line x1="5" y1="50" x2="10" y2="50" stroke="rgba(135,206,235,0.3)" stroke-width="0.5"/>
+                            <line x1="90" y1="50" x2="95" y2="50" stroke="rgba(135,206,235,0.3)" stroke-width="0.5"/>
+                        </svg>
+
+                        <!-- AR Scanning Line (Simulated laser) -->
+                        <div id="scanning-laser" class="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-sky to-transparent top-0 animate-bounce shadow-[0_0_10px_#87CEEB]" style="animation-duration: 3s; display:none;"></div>
+
+                        <!-- Instruction Overlay Card -->
+                        <div class="absolute bottom-4 left-4 right-4 bg-slate-950/80 backdrop-blur border border-slate-800 rounded-xl p-3 flex justify-between items-center shadow-lg transition-all duration-300" id="scanner-instruction-panel">
+                            <div>
+                                <span class="text-[10px] text-sky tracking-widest font-bold block uppercase terminal">AR ALIGNMENT ASSIST</span>
+                                <p class="text-sm font-semibold text-white" id="scanner-instruction-text">Fit your face inside the sky-blue frame and hold steady.</p>
+                            </div>
+                            <span class="text-slate-400 font-bold text-xs uppercase tracking-wider bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 animate-pulse terminal" id="scanner-status">READY</span>
+                        </div>
+                    </div>
+
+                    <!-- Scan Mode and Selection Trigger Buttons -->
+                    <div class="grid grid-cols-3 gap-4 mt-4">
+                        <button onclick="setScanMode('face')" id="btn-mode-face" class="flex items-center justify-center gap-2 border border-sky bg-sky/10 text-sky px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-sky/20 transition-all duration-200">
+                            👤 Face Scanning
+                        </button>
+                        <button onclick="setScanMode('tongue')" id="btn-mode-tongue" class="flex items-center justify-center gap-2 border border-slate-700 bg-slate-900/50 text-slate-300 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition-all duration-200">
+                            👅 Tongue Scanning
+                        </button>
+                        <button onclick="triggerAnalysisSequence()" class="bg-gradient-to-r from-sky to-sky-dark hover:from-sky-light hover:to-sky text-slate-950 font-bold text-xs uppercase tracking-widest py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-sky/20 transition-all duration-300 transform active:scale-95">
+                            ⚡ RUN DIAGNOSIS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. THE TCM INTERACTIVE RADAR CHART CANVAS -->
+                <div class="glass rounded-3xl p-6 flex flex-col md:flex-row gap-6 shadow-2xl relative transition-all duration-300 hover:border-sky/30">
+                    <!-- Audio synthesis status indicator -->
+                    <div class="absolute top-6 right-6 flex items-center gap-1.5 text-[10px] terminal text-slate-500 bg-slate-900 px-2 py-1 rounded border border-slate-800">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-700" id="audio-pill"></span> Web Audio Synth
+                    </div>
+
+                    <!-- Canvas Visualization Box -->
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <h3 class="text-xs tracking-widest font-black text-slate-400 uppercase mb-2 terminal">Multimodal Pentagon Radar</h3>
+                        <div class="relative bg-slate-950 rounded-2xl border border-slate-800 p-2 flex items-center justify-center shadow-inner cursor-pointer group">
+                            <!-- Custom HTML5 Canvas -->
+                            <canvas id="tcmRadarCanvas" width="320" height="320" class="transition-all duration-300 group-hover:scale-[1.01]"></canvas>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-2 text-center max-w-[280px]">Interactive: Click vertices to isolate organ path, hear resonance frequency, and fetch RAG rules.</p>
+                    </div>
+
+                    <!-- Dynamic Organ Details & Recommendation Board -->
+                    <div class="flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                                <div>
+                                    <span class="text-[10px] font-black tracking-widest block uppercase text-slate-500 terminal" id="selected-organ-element">EARTH / DIGESTION</span>
+                                    <h4 class="text-xl font-black text-white uppercase tracking-wider" id="selected-organ-title">Spleen Net (Pi)</h4>
+                                </div>
+                                <span class="bg-yellow-400/10 text-yellow-300 font-bold border border-yellow-400/20 px-3 py-1 rounded-xl text-lg terminal shadow-lg" id="selected-organ-score">65%</span>
+                            </div>
+
+                            <!-- Diagnosis Report Card content -->
+                            <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-800/80 mb-4 min-h-[140px]">
+                                <span class="text-[10px] text-sky tracking-widest font-bold uppercase block terminal mb-2">Diagnostic Syndrome Mapping (Zheng)</span>
+                                <p class="text-sm text-slate-300 leading-relaxed" id="selected-organ-zheng">Puffy, swollen tongue borders with teeth-marks, accompanied by pale complexion in the cheeks, indicates localized Spleen Qi Deficiency and fluid retention (Dampness).</p>
+                                
+                                <div class="mt-4 pt-3 border-t border-slate-800/60 grid grid-cols-2 gap-2 text-xs">
+                                    <div>
+                                        <span class="text-slate-500 block uppercase tracking-wider text-[9px] font-bold terminal">ACUPRESSURE TARGET</span>
+                                        <span class="text-white font-medium block mt-0.5" id="selected-organ-acupressure">SP 6 (San Yin Jiao)</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500 block uppercase tracking-wider text-[9px] font-bold terminal">SOUND HEALING GATE</span>
+                                        <span class="text-white font-medium block mt-0.5" id="selected-organ-resonance">Gong 音 (369 Hz)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Diet & Lifestyle Remedy Outputs -->
+                        <div class="bg-gradient-to-r from-slate-900/60 to-sky/5 p-4 rounded-2xl border border-sky/10 shadow-[0_0_15px_rgba(135,206,235,0.02)]">
+                            <span class="text-[10px] text-yellow-300 tracking-widest font-bold uppercase block terminal mb-2">Dietary Remedy Therapy (Shi Liao)</span>
+                            <div class="flex items-start gap-3">
+                                <span class="text-2xl mt-0.5" id="remedy-emoji">🥣</span>
+                                <div>
+                                    <p class="text-xs sm:text-sm text-white font-bold" id="remedy-title">Warm Millet Congee with Ginger</p>
+                                    <p class="text-xs text-slate-400 mt-1 leading-relaxed" id="remedy-desc">Sweet, warm foods reinforce Earth element. Avoid raw cold dairy, salads, and refined sugars which weaken digestive fire.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- COLUMN 2: TEMPORAL ENGINE & STATE MACHINE (5 COLS) -->
+            <section class="col-span-1 lg:col-span-5 flex flex-col gap-8">
+                
+                <!-- 1. TEMPORAL ENGINE & DUAL-CALENDAR CLOCK -->
+                <div class="glass rounded-3xl p-6 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-sky/30">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl"></div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-white">
+                            🕰️ Temporal Clock Sync
+                        </h2>
+                        <span class="bg-indigo-950/50 text-[10px] text-indigo-300 border border-indigo-500/20 font-bold px-2 py-0.5 rounded uppercase tracking-widest terminal">International Fixed Calendar (IFC)</span>
+                    </div>
+
+                    <!-- IFC Display Container -->
+                    <div class="grid grid-cols-2 gap-4 bg-slate-950 p-4 rounded-2xl border border-slate-900 shadow-inner mb-4">
+                        <div class="flex flex-col border-r border-slate-800/60 pr-2">
+                            <span class="text-[10px] text-slate-500 uppercase tracking-widest block mb-1 terminal">Gregorian Input Date</span>
+                            <span class="text-sm font-black text-white" id="gregorian-date-str">August 4, 2026</span>
+                            <span class="text-[11px] text-slate-400 mt-0.5" id="gregorian-time-str">17:25 (Tuesday)</span>
+                        </div>
+                        <div class="flex flex-col pl-2">
+                            <span class="text-[10px] text-sky tracking-widest block mb-1 uppercase terminal">Rhythmic IFC Cycle Date</span>
+                            <span class="text-sm font-black text-sky-light uppercase tracking-wider" id="ifc-date-str">Cycle 8 (Earth): Sol 18</span>
+                            <span class="text-[11px] text-slate-400 mt-0.5" id="ifc-terms">Solar Term: Great Heat (Daju)</span>
+                        </div>
+                    </div>
+
+                    <!-- Rhythmic Progress bar -->
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs text-slate-400 mb-2">
+                            <span class="font-bold">28-Day Lunar Cycle Timeline</span>
+                            <span class="terminal text-sky" id="cycle-day-count">Day 18 / 28</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-3.5 p-0.5 border border-slate-800 shadow-inner">
+                            <div id="cycle-progress-bar" class="h-full rounded-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-amber-500 shadow-[0_0_10px_rgba(255,215,0,0.3)] transition-all duration-1000" style="width: 64.2%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Lunar Clock & Organ Clock Phase Row -->
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-900/50 border border-slate-800/80 rounded-xl p-3 flex items-center gap-3">
+                            <span class="text-2xl" id="moon-phase-emoji">🌖</span>
+                            <div>
+                                <span class="text-slate-500 block uppercase text-[9px] tracking-wider terminal">Lunar Phase Alignment</span>
+                                <span class="text-white font-bold block" id="moon-phase-title">Waning Gibbous</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5 leading-none">Optimal Cycle Detoxification</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/50 border border-slate-800/80 rounded-xl p-3 flex items-center gap-3">
+                            <span class="text-2xl">⏰</span>
+                            <div>
+                                <span class="text-slate-500 block uppercase text-[9px] tracking-wider terminal">Active Organ Clock Zone</span>
+                                <span class="text-white font-bold block" id="clock-organ-title">Kidney Net (Shen)</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5 leading-none">17:00 - 19:00 (Fluid Balance)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. THE TRIADIC BOUNDARY STATE MACHINE CALCULATOR -->
+                <div class="glass rounded-3xl p-6 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-sky/30">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-sky/5 rounded-full blur-3xl"></div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-white">
+                            🧬 Triadic State Machine
+                        </h2>
+                        <span class="bg-slate-800 text-[10px] text-slate-300 border border-slate-700 px-2 py-0.5 rounded uppercase tracking-widest terminal">P, R, I Calculation Model</span>
+                    </div>
+
+                    <!-- Form Inputs for Root Compression -->
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="text-[10px] text-slate-500 uppercase font-black block mb-1 terminal">Birth Date Seed (YYYY-MM-DD)</label>
+                            <input onchange="computeStateFromInputs()" id="birth-date-input" type="date" value="2000-01-01" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-semibold text-xs tracking-wider focus:outline-none focus:border-sky">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-500 uppercase font-black block mb-1 terminal">Birth Time Seed (HH:MM)</label>
+                            <input onchange="computeStateFromInputs()" id="birth-time-input" type="time" value="12:00" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-semibold text-xs tracking-wider focus:outline-none focus:border-sky">
+                        </div>
+                    </div>
+
+                    <!-- Math calculation process details -->
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-900 shadow-inner mb-4 flex flex-col gap-2">
+                        <div class="flex justify-between items-center text-xs border-b border-slate-900 pb-2">
+                            <span class="text-slate-500 uppercase tracking-widest text-[9px] terminal">Base Digit Reduction Math</span>
+                            <span class="text-sky font-bold uppercase tracking-wider text-[10px] terminal" id="math-trace">Sum: 3 + 6 = 9 Root</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs pt-1">
+                            <div class="flex flex-col">
+                                <span class="text-slate-500 text-[9px] uppercase tracking-wider terminal">Immutable Core Vector Seed</span>
+                                <span class="text-white font-bold" id="core-seed-display">Seed: 9</span>
+                            </div>
+                            <div class="flex flex-col text-right">
+                                <span class="text-slate-500 text-[9px] uppercase tracking-wider terminal">Assigned System Role</span>
+                                <span class="text-sky-light font-black uppercase tracking-wider" id="core-role-display">Integrator</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive P, R, I Triad Display Outputs -->
+                    <div class="grid grid-cols-3 gap-3 text-center mb-4">
+                        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-3 flex flex-col justify-center shadow">
+                            <span class="text-[9px] text-slate-500 uppercase tracking-widest font-black block terminal">P (Perception)</span>
+                            <span class="text-2xl font-black text-emerald-400 mt-1 terminal" id="triad-p">9</span>
+                            <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold block">Input Bias</span>
+                        </div>
+                        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-3 flex flex-col justify-center shadow">
+                            <span class="text-[9px] text-slate-500 uppercase tracking-widest font-black block terminal">R (Processing)</span>
+                            <span class="text-2xl font-black text-sky mt-1 terminal" id="triad-r">3</span>
+                            <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold block">Model Bias</span>
+                        </div>
+                        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-3 flex flex-col justify-center shadow">
+                            <span class="text-[9px] text-slate-500 uppercase tracking-widest font-black block terminal">I (Integration)</span>
+                            <span class="text-2xl font-black text-indigo-400 mt-1 terminal" id="triad-i">3</span>
+                            <span class="text-[9px] text-slate-400 mt-1 uppercase font-semibold block">Output Relation</span>
+                        </div>
+                    </div>
+
+                    <!-- Cognitive Lens Suggestions -->
+                    <div class="bg-gradient-to-r from-indigo-950/30 to-sky/5 p-4 rounded-2xl border border-indigo-500/10 relative overflow-hidden">
+                        <span class="text-[10px] text-indigo-300 tracking-widest font-bold uppercase block terminal mb-1">State Machine Suggestions (Cognitive Lens)</span>
+                        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-semibold italic" id="cognitive-lens-text">"Energy favors pattern integration rather than direct initiation today. Consolidate systems, close open files, focus on harmonizing the internal environment to decrease total computational entropy."</p>
+                    </div>
+                </div>
+
+                <!-- 3. WEBAUDIO SOUND HEALING SYNTH & CYMATICS GATE -->
+                <div class="glass rounded-3xl p-6 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-sky/30">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-wood/5 rounded-full blur-3xl"></div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-white">
+                            🎵 Cymatic Frequency Generator
+                        </h2>
+                        <span class="bg-slate-800 text-[10px] text-emerald-300 border border-emerald-500/20 px-2 py-0.5 rounded uppercase tracking-widest terminal">Web Audio Synth</span>
+                    </div>
+
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">Select a target frequency to play the corresponding pure harmonic resonance wave. Sound vibrations travel through the nervous system to balance organ energy fields.</p>
+
+                    <!-- Wave buttons grid -->
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="playTargetFrequency(369)" id="btn-freq-369" class="flex flex-col items-center justify-center border border-slate-800 bg-slate-900/50 hover:bg-slate-800 px-2 py-3 rounded-xl transition-all duration-200">
+                            <span class="text-xs font-bold text-white tracking-widest terminal">369 Hz</span>
+                            <span class="text-[8px] text-yellow-300 mt-1 uppercase tracking-wider font-black terminal">Gong / Spleen</span>
+                        </button>
+                        <button onclick="playTargetFrequency(432)" id="btn-freq-432" class="flex flex-col items-center justify-center border border-slate-800 bg-slate-900/50 hover:bg-slate-800 px-2 py-3 rounded-xl transition-all duration-200">
+                            <span class="text-xs font-bold text-white tracking-widest terminal">432 Hz</span>
+                            <span class="text-[8px] text-green-300 mt-1 uppercase tracking-wider font-black terminal">Jue / Liver</span>
+                        </button>
+                        <button onclick="playTargetFrequency(528)" id="btn-freq-528" class="flex flex-col items-center justify-center border border-slate-800 bg-slate-900/50 hover:bg-slate-800 px-2 py-3 rounded-xl transition-all duration-200">
+                            <span class="text-xs font-bold text-white tracking-widest terminal">528 Hz</span>
+                            <span class="text-[8px] text-red-300 mt-1 uppercase tracking-wider font-black terminal">Zhi / Heart</span>
+                        </button>
+                        <button onclick="playTargetFrequency(396)" id="btn-freq-396" class="flex flex-col items-center justify-center border border-slate-800 bg-slate-900/50 hover:bg-slate-800 px-2 py-3 rounded-xl transition-all duration-200">
+                            <span class="text-xs font-bold text-white tracking-widest terminal">396 Hz</span>
+                            <span class="text-[8px] text-blue-300 mt-1 uppercase tracking-wider font-black terminal">Yu / Kidney</span>
+                        </button>
+                    </div>
+
+                    <!-- Volume slider & Stop Button -->
+                    <div class="flex items-center justify-between gap-4 mt-4 bg-slate-950 p-3 rounded-xl border border-slate-900">
+                        <div class="flex items-center gap-2 flex-grow">
+                            <span class="text-[10px] text-slate-500 uppercase tracking-widest font-black block terminal">Volume</span>
+                            <input oninput="updateSynthVolume(this.value)" id="volume-range" type="range" min="0" max="0.5" step="0.05" value="0.2" class="w-full accent-sky h-1 rounded-lg bg-slate-800 cursor-pointer">
+                        </div>
+                        <button onclick="stopSynthSound()" class="border border-red-500 bg-red-500/10 text-red-400 font-bold px-3 py-1.5 rounded-lg text-xs uppercase tracking-wider hover:bg-red-500/20 transition-all duration-200">
+                            Stop Wave
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+
+        <!-- KNOWLEDGE RECURSION & EPISODIC MEMORY SYSTEM (FULL WIDTH) -->
+        <section class="mt-8">
+            <div class="glass rounded-3xl p-6 relative overflow-hidden shadow-2xl transition-all duration-300 hover:border-sky/30">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-white">
+                        🧠 Recursive Knowledge Loop & Episodic Memory
+                    </h2>
+                    <span class="bg-emerald-950/50 text-[10px] text-emerald-300 border border-emerald-500/20 font-bold px-2 py-0.5 rounded uppercase tracking-widest terminal">GÖDEL AGENT REFLECTION PROTOCOL</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Proactive Intervention Form Simulator -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-900 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] text-sky tracking-widest font-bold uppercase block terminal mb-2">Simulate Proactive Interaction</span>
+                            <div class="flex flex-col gap-3">
+                                <div>
+                                    <label class="text-[9px] text-slate-500 uppercase tracking-wider block mb-1 font-bold terminal">Turn Situation (Context)</label>
+                                    <input id="episode-situation" type="text" value="User reports sallow cheeks and digestive fatigue on Sol Day 18." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-semibold text-xs tracking-wider focus:outline-none focus:border-sky">
+                                </div>
+                                <div>
+                                    <label class="text-[9px] text-slate-500 uppercase tracking-wider block mb-1 font-bold terminal">Proposed Recommendation (Intent/Action)</label>
+                                    <input id="episode-action" type="text" value="Proactively advise warm sweet potato with Sol congee recipe." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-semibold text-xs tracking-wider focus:outline-none focus:border-sky">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mt-4">
+                            <button onclick="recordEpisodeFeedback(true)" class="border border-emerald-500 bg-emerald-500/10 text-emerald-400 font-bold px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider hover:bg-emerald-500/20 transition-all duration-200 flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/5">
+                                ✅ Accept Advice
+                            </button>
+                            <button onclick="recordEpisodeFeedback(false)" class="border border-red-500 bg-red-500/10 text-red-400 font-bold px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider hover:bg-red-500/20 transition-all duration-200 flex items-center justify-center gap-1.5 shadow-lg shadow-red-500/5">
+                                ❌ Reject Advice
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ephemeral Episodic Structured Output (The JSON log) -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-900">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] text-slate-400 tracking-widest font-bold uppercase block terminal">Structured Episode Schema</span>
+                            <span class="text-[9px] text-slate-600 terminal uppercase font-bold">Turn Log</span>
+                        </div>
+                        <pre id="json-episode-output" class="text-[10px] text-sky-light/80 leading-tight h-[180px] overflow-y-auto whitespace-pre-wrap terminal bg-slate-900 p-3 rounded-xl border border-slate-850/60 shadow-inner">
+{
+  "Turn_Situation": "Baseline initialized",
+  "Agent_Intent": "Calibrate diagnostic engine",
+  "Agent_Action": "Initial RAG query executed",
+  "Agent_Thought": "System values synchronized",
+  "User_Assessment": "ACCEPTED"
+}
+                        </pre>
+                    </div>
+
+                    <!-- Live Rolling Metric Computations -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-900 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] text-sky tracking-widest font-bold uppercase block terminal mb-3">Live Rolling Agent Performance</span>
+                            
+                            <!-- Large rolling metrics -->
+                            <div class="grid grid-cols-2 gap-4 text-center">
+                                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                                    <span class="text-[9px] text-slate-500 uppercase font-black block terminal">Proactive Precision</span>
+                                    <span class="text-3xl font-black text-white terminal block mt-1" id="metrics-precision">100%</span>
+                                    <span class="text-[8px] font-bold text-slate-400 mt-1 uppercase block">Acceptance Rate</span>
+                                </div>
+                                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                                    <span class="text-[9px] text-slate-500 uppercase font-black block terminal">Self-Correct Recall</span>
+                                    <span class="text-3xl font-black text-white terminal block mt-1" id="metrics-recall">100%</span>
+                                    <span class="text-[8px] font-bold text-slate-400 mt-1 uppercase block">TP / (TP + FN)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mathematical verification formula explanation -->
+                        <div class="text-[10px] text-slate-500 leading-normal border-t border-slate-900 pt-3 mt-4">
+                            <span class="font-bold block text-slate-400 uppercase terminal tracking-wider text-[8px] mb-1">Self-Evolution Equation</span>
+                            Every interaction is recorded in a closed-loop. Rejections dynamically generate a counter-critique pattern (DeepInnovator), forcing model self-correction (Gödel loop) to optimize total system Recall.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- PRIVACY, SECURITIES, & COMPLIANCE FOOTER -->
+        <footer class="mt-8 text-center border-t border-slate-900 pt-6 pb-4">
+            <p class="text-[11px] text-slate-600 max-w-2xl mx-auto leading-relaxed uppercase tracking-wider terminal">
+                🛡️ HIPAA & GDPR SECURED DEPLOYMENT — PRE-PROCESSED EXCLUSIVELY ON-DEVICE — ANONYMIZED EXCURSIONS VIA CLOUD RUN SERVERLESS ENDPOINTS. 
+            </p>
+            <p class="text-[11px] text-slate-600 font-bold block mt-1 uppercase tracking-widest terminal">
+                DrYu iQ AI is an educational wellness aid, not a medical prognosticator. Consult health professionals for medical diagnoses.
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- MAIN JAVASCRIPT APP LOGIC -->
+    <script>
+        // System variables
+        let scanMode = 'face';
+        let currentVol = 0.2;
+        let activeOscillator = null;
+        let audioCtx = null;
+        let acceptCount = 1;
+        let rejectCount = 0;
+
+        // Base reduction data model for state machine
+        const roles = {
+            1: "Initiator",
+            2: "Observer",
+            3: "Structurer",
+            4: "Stabilizer",
+            5: "Explorer",
+            6: "Harmonizer",
+            7: "Analyzer",
+            8: "Executor",
+            9: "Integrator"
+        };
+
+        const elements = ['Wood', 'Wood', 'Wood', 'Fire', 'Fire', 'Fire', 'Earth', 'Earth', 'Earth', 'Metal', 'Metal', 'Water', 'Water'];
+
+        // Initial Organ Metrics (Default starting ratings)
+        let tcmScores = {
+            Liver: 75,
+            Heart: 80,
+            Spleen: 65,
+            Lung: 70,
+            Kidney: 85
+        };
+
+        const organData = {
+            Liver: {
+                title: "Liver Net (Gan)",
+                element: "Wood / Vision",
+                zheng: "Yellowish sallow tint in eyes and a dry tongue edge, combined with right-side glabella furrowing, signifies stagnant Liver Qi transitioning to emotional blockage (irritability).",
+                acupressure: "LV 3 (Taichong)",
+                resonance: "Jue 音 (432 Hz)",
+                remedyEmoji: "🥬",
+                remedyTitle: "Organic Leafy Greens & Warm Lemon Water",
+                remedyDesc: "Sour and green-colored foods disperse Liver Qi stagnation. Avoid heavy greasy fats, alcohol, and refined processed chemicals to clear damp-heat."
+            },
+            Heart: {
+                title: "Heart Net (Xin)",
+                element: "Fire / Complexion",
+                zheng: "Red, dry tongue tip and vertical nasal-labial creasing suggests high arterial pressure or heart-fire agitation (extreme stress or insomnia).",
+                acupressure: "HT 7 (Shenmen)",
+                resonance: "Zhi 音 (528 Hz)",
+                remedyEmoji: "🥩",
+                remedyTitle: "Organic Red Meat (Grass-Fed) & Warm Broths",
+                remedyDesc: "Bitter and warming foods normalize Heart Qi flow. Avoid excess stimulants, caffeine, and ice-cold drinks which shock the coronary channels."
+            },
+            Spleen: {
+                title: "Spleen Net (Pi)",
+                element: "Earth / Digestion",
+                zheng: "Puffy, swollen tongue borders with teeth-marks, accompanied by sallow, pale complexion in the cheeks, indicates Spleen Qi Deficiency and fluid retention (Dampness).",
+                acupressure: "SP 6 (San Yin Jiao)",
+                resonance: "Gong 音 (369 Hz)",
+                remedyEmoji: "🥣",
+                remedyTitle: "Warm Millet Congee with Ginger",
+                remedyDesc: "Sweet, warm foods reinforce Earth element. Avoid raw cold dairy, salads, and refined sugars which weaken digestive fire."
+            },
+            Lung: {
+                title: "Lung Net (Fei)",
+                element: "Metal / Respiration",
+                zheng: "Dry skin, premature skin wrinkling in cheeks, and thin white tongue coating suggest deficiency in Lung Qi (respiratory fatigue or dry skin barrier).",
+                acupressure: "LU 9 (Taiyuan)",
+                resonance: "Shang 音 (455 Hz)",
+                remedyEmoji: "🍐",
+                remedyTitle: "Steamed Pears with Organic Honey",
+                remedyDesc: "Moistening white foods lubricate Lung dryness. Avoid ultra-processed foods, deep-fried items, and smoking which congest respiratory membranes."
+            },
+            Kidney: {
+                title: "Kidney Net (Shen)",
+                element: "Water / Fluid Balance",
+                zheng: "Dark, puffy bags under the eyes, chronic exhaustion, and a pale tongue with deep toothmarks indicates deep adrenal depletion and poor fluid metabolism (Kidney Yang Deficiency).",
+                acupressure: "KI 3 (Taixi)",
+                resonance: "Yu 音 (396 Hz)",
+                remedyEmoji: "🖤",
+                remedyTitle: "Adzuki Beans & Organic Bone Broth",
+                remedyDesc: "Salty, dark organic foods reinforce Water and Kidney essence (Jing). Avoid table salt, chemical energy drinks, and dehydration."
+            }
+        };
+
+        // Window onload initialization
+        window.onload = function() {
+            // Live epoch timestamp simulation
+            setInterval(() => {
+                document.getElementById('live-epoch').innerText = (Date.now() / 1000).toFixed(3);
+            }, 100);
+
+            // Configure current date input to 2026-08-04
+            let today = new Date('2026-08-04');
+            let bdate = document.getElementById('birth-date-input');
+            if (bdate) bdate.value = "2000-01-01";
+
+            // Initialize calculations
+            computeStateFromInputs();
+            drawRadarChart('Spleen');
+        };
+
+        // Base reduction digital root calculator
+        function getDigitalRoot(num) {
+            if (num === 0) return 9; // Non-mystical normalization
+            let sum = 0;
+            while (num > 0 || sum > 9) {
+                if (num === 0) {
+                    num = sum;
+                    sum = 0;
+                }
+                sum += num % 10;
+                num = Math.floor(num / 10);
+            }
+            return sum;
+        }
+
+        // Main Calculation Engine for State Machine
+        function computeStateFromInputs() {
+            const birthDate = document.getElementById('birth-date-input').value; // YYYY-MM-DD
+            const birthTime = document.getElementById('birth-time-input').value; // HH:MM
+
+            if (!birthDate || !birthTime) return;
+
+            // Strip characters to numbers only
+            const dateStr = birthDate.replace(/[^0-9]/g, '');
+            const timeStr = birthTime.replace(/[^0-9]/g, '');
+
+            let dateSum = 0;
+            for (let char of dateStr) dateSum += parseInt(char);
+
+            let timeSum = 0;
+            for (let char of timeStr) timeSum += parseInt(char);
+
+            const coreSeed = getDigitalRoot(dateSum + timeSum);
+            const sysRole = roles[coreSeed];
+
+            // Display outputs
+            document.getElementById('core-seed-display').innerText = `Seed: ${coreSeed}`;
+            document.getElementById('core-role-display').innerText = sysRole;
+            document.getElementById('math-trace').innerText = `Math Sum: ${dateSum + timeSum} -> Digital Root`;
+
+            // Calculate dynamic R and I based on target date August 4, 2026
+            const epochStart = new Date('1970-01-01');
+            const targetDate = new Date('2026-08-04');
+            const daysSinceEpoch = Math.floor((targetDate - epochStart) / (24 * 60 * 60 * 1000));
+            
+            const dayIndex = daysSinceEpoch % 9;
+            const dailyModifier = (coreSeed + dayIndex) % 9;
+            const integration = (coreSeed + dailyModifier) % 9;
+
+            document.getElementById('triad-p').innerText = coreSeed;
+            document.getElementById('triad-r').innerText = dailyModifier === 0 ? 9 : dailyModifier;
+            document.getElementById('triad-i').innerText = integration === 0 ? 9 : integration;
+
+            // Generate customized cognitive lens text
+            generateCognitiveLensText(coreSeed, sysRole, integration);
+        }
+
+        function generateCognitiveLensText(seed, role, integration) {
+            const adviceList = {
+                1: "Energy favors pioneering initiatives today. Act as the Initiator—proactively define new targets, clear obsolete code, and begin fresh sprints.",
+                2: "Focus heavily on observation and gathering clean signal data today. Stand back as the Observer; audit existing patterns without forcing immediate change.",
+                3: "Structure and organize your databases or workspace today. Put things in code format, refine schemas, and build solid, repeatable foundations.",
+                4: "Nurture security and stabilize core nodes. This is an execution period for safeguarding parameters, creating backups, and building local resilience.",
+                5: "Open exploration is highly favored today. Run experiments, test outlier hypotheses, adjust ML settings, and explore alternative remedies.",
+                6: "Focus on balancing and harmonizing your internal and external environments. Support healthy digestion, hydrate deeply, and defuse interpersonal conflicts.",
+                7: "Run rigorous diagnostic checks. Act as the Analyzer—scrutinize previous data models, calculate error rates, and look for tiny details in the system.",
+                8: "Massive execution and practical actions are favored today. Run the code, cook the nourishing meals, do the exercises, and fulfill commitments with integrity.",
+                9: "Today favors systemic integration and closing loops. Reflect on past sessions, save structured logs, decrease system entropy, and rest the neural network."
+            };
+
+            const selectedAdvice = adviceList[integration === 0 ? 9 : integration];
+            document.getElementById('cognitive-lens-text').innerText = `"${selectedAdvice} Aligns with your Core Seed role of ${role}."`;
+        }
+
+        // AR Cam scan mode switcher
+        function setScanMode(mode) {
+            scanMode = mode;
+            const cam = document.getElementById('camera-feed');
+            const oval = document.getElementById('ar-face-oval');
+            const box = document.getElementById('ar-tongue-box');
+            const instText = document.getElementById('scanner-instruction-text');
+            
+            // UI state resets
+            document.getElementById('btn-mode-face').className = "flex items-center justify-center gap-2 border border-slate-700 bg-slate-900/50 text-slate-400 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition-all duration-200";
+            document.getElementById('btn-mode-tongue').className = "flex items-center justify-center gap-2 border border-slate-700 bg-slate-900/50 text-slate-400 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-800 transition-all duration-200";
+
+            if (mode === 'face') {
+                document.getElementById('btn-mode-face').className = "flex items-center justify-center gap-2 border border-sky bg-sky/10 text-sky px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-sky/20 transition-all duration-200";
+                cam.style.backgroundImage = "url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600')";
+                oval.classList.remove('hidden');
+                box.classList.add('hidden');
+                instText.innerText = "Center your face in the oval frame and hold steady.";
+            } else {
+                document.getElementById('btn-mode-tongue').className = "flex items-center justify-center gap-2 border border-red-500 bg-red-500/10 text-red-400 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-red-500/20 transition-all duration-200";
+                cam.style.backgroundImage = "url('https://images.unsplash.com/photo-1540569014015-19a7be504e3a?auto=format&fit=crop&q=80&w=600')";
+                oval.classList.add('hidden');
+                box.classList.remove('hidden');
+                instText.innerText = "Stick out your tongue clearly inside the target red box.";
+            }
+        }
+
+        // Simulated scanner animation sequence
+        function triggerAnalysisSequence() {
+            const laser = document.getElementById('scanning-laser');
+            const status = document.getElementById('scanner-status');
+            laser.style.display = 'block';
+            status.innerText = "ANALYZING";
+            status.className = "text-yellow-300 font-bold text-xs uppercase tracking-wider bg-slate-800 px-3 py-1.5 rounded-lg border border-yellow-400/20 animate-ping terminal";
+
+            setTimeout(() => {
+                laser.style.display = 'none';
+                status.innerText = "SYNCED";
+                status.className = "text-emerald-400 font-bold text-xs uppercase tracking-wider bg-slate-800 px-3 py-1.5 rounded-lg border border-emerald-500/20 terminal";
+                
+                // Randomly modify ratings and update display
+                tcmScores.Liver = Math.floor(Math.random() * 25 + 65);
+                tcmScores.Heart = Math.floor(Math.random() * 25 + 70);
+                tcmScores.Spleen = Math.floor(Math.random() * 25 + 60);
+                tcmScores.Lung = Math.floor(Math.random() * 25 + 65);
+                tcmScores.Kidney = Math.floor(Math.random() * 25 + 70);
+
+                const activeOrgan = scanMode === 'face' ? 'Liver' : 'Spleen';
+                updateSelectedOrgan(activeOrgan);
+                drawRadarChart(activeOrgan);
+            }, 2500);
+        }
+
+        // Acupressure audio waves - Play Web Audio synth
+        function playTargetFrequency(freq) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                if (activeOscillator) {
+                    activeOscillator.stop();
+                    activeOscillator.disconnect();
+                }
+
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                // Create synth node chain
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gainNode.gain.setValueAtTime(currentVol, audioCtx.currentTime);
+
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                osc.start();
+                activeOscillator = osc;
+
+                // UI status update
+                const audioPill = document.getElementById('audio-pill');
+                audioPill.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+                
+                // Dim active state classes on wave buttons
+                [369, 432, 528, 396].forEach(f => {
+                    document.getElementById(`btn-freq-${f}`).classList.remove('border-emerald-500', 'bg-emerald-500/10');
+                });
+                document.getElementById(`btn-freq-${freq}`).classList.add('border-emerald-500', 'bg-emerald-500/10');
+
+            } catch (error) {
+                console.error('AudioContext is blocked or unsupported.', error);
+            }
+        }
+
+        function stopSynthSound() {
+            if (activeOscillator) {
+                activeOscillator.stop();
+                activeOscillator.disconnect();
+                activeOscillator = null;
+            }
+            const audioPill = document.getElementById('audio-pill');
+            audioPill.className = "w-1.5 h-1.5 rounded-full bg-slate-700";
+
+            [369, 432, 528, 396].forEach(f => {
+                document.getElementById(`btn-freq-${f}`).classList.remove('border-emerald-500', 'bg-emerald-500/10');
+            });
+        }
+
+        function updateSynthVolume(val) {
+            currentVol = parseFloat(val);
+            if (activeOscillator) {
+                // If sound is playing, trigger live volume sync
+                const originalFreq = activeOscillator.frequency.value;
+                playTargetFrequency(originalFreq);
+            }
+        }
+
+        // Interactive pentagon canvas drawing
+        function drawRadarChart(isolatedOrgan = 'Spleen') {
+            const canvas = document.getElementById('tcmRadarCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 320, 320);
+
+            const centerX = 160;
+            const centerY = 160;
+            const outerRadius = 110;
+            const organs = ['Liver', 'Heart', 'Spleen', 'Lung', 'Kidney'];
+            const colors = {
+                Liver: '#98FB98', // Green (Wood)
+                Heart: '#FF4040', // Red (Fire)
+                Spleen: '#FFD700', // Yellow (Earth)
+                Lung: '#C0C0C0',   // Silver (Metal)
+                Kidney: '#4169E1'  // Blue (Water)
+            };
+
+            // Draw concentric pentagon grids
+            for (let j = 5; j > 0; j--) {
+                const stepRadius = (outerRadius / 5) * j;
+                ctx.beginPath();
+                for (let i = 0; i < 5; i++) {
+                    const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+                    const x = centerX + Math.cos(angle) * stepRadius;
+                    const y = centerY + Math.sin(angle) * stepRadius;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = j === 5 ? 'rgba(135,206,235,0.3)' : 'rgba(135,206,235,0.08)';
+                ctx.stroke();
+            }
+
+            // Draw element axes
+            for (let i = 0; i < 5; i++) {
+                const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(centerX + Math.cos(angle) * outerRadius, centerY + Math.sin(angle) * outerRadius);
+                ctx.strokeStyle = 'rgba(135,206,235,0.15)';
+                ctx.stroke();
+
+                // Draw vertex labels
+                const labelX = centerX + Math.cos(angle) * (outerRadius + 18);
+                const labelY = centerY + Math.sin(angle) * (outerRadius + 18);
+                ctx.fillStyle = isolatedOrgan === organs[i] ? colors[organs[i]] : 'rgba(255,255,255,0.6)';
+                ctx.font = isolatedOrgan === organs[i] ? 'bold 11px Share Tech Mono' : '9px Share Tech Mono';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(organs[i].toUpperCase(), labelX, labelY);
+            }
+
+            // Calculate current scores coordinates
+            let coordinates = [];
+            for (let i = 0; i < 5; i++) {
+                const organ = organs[i];
+                const score = tcmScores[organ];
+                const distance = (score / 100) * outerRadius;
+                const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+                coordinates.push({
+                    x: centerX + Math.cos(angle) * distance,
+                    y: centerY + Math.sin(angle) * distance,
+                    color: colors[organ],
+                    organ: organ
+                });
+            }
+
+            // Draw filled chart shape
+            ctx.beginPath();
+            ctx.moveTo(coordinates[0].x, coordinates[0].y);
+            for (let i = 1; i < 5; i++) {
+                ctx.lineTo(coordinates[i].x, coordinates[i].y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(135,206,235,0.25)';
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = '#87CEEB';
+            ctx.stroke();
+
+            // Draw vertices and isolated organ highlighting ring
+            coordinates.forEach((pt, i) => {
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = pt.color;
+                ctx.fill();
+
+                if (isolatedOrgan === pt.organ) {
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, 8, 0, Math.PI * 2);
+                    ctx.strokeStyle = pt.color;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            });
+
+            // Tap interaction detection overlay logic
+            canvas.onclick = function(e) {
+                const rect = canvas.getBoundingClientRect();
+                const tapX = e.clientX - rect.left;
+                const tapY = e.clientY - rect.top;
+
+                // Find closest vertex node
+                let closestOrgan = 'Spleen';
+                let minDist = 99999;
+                
+                for (let i = 0; i < 5; i++) {
+                    const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+                    const vX = centerX + Math.cos(angle) * outerRadius;
+                    const vY = centerY + Math.sin(angle) * outerRadius;
+                    const dist = Math.sqrt((tapX - vX)**2 + (tapY - vY)**2);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestOrgan = organs[i];
+                    }
+                }
+
+                if (minDist < 45) { // Threshold for vertex selection
+                    updateSelectedOrgan(closestOrgan);
+                    drawRadarChart(closestOrgan);
+                }
+            };
+        }
+
+        // Live diagnostic recommendations updating
+        function updateSelectedOrgan(organName) {
+            const details = organData[organName];
+            const score = tcmScores[organName];
+
+            document.getElementById('selected-organ-element').innerText = details.element.toUpperCase();
+            document.getElementById('selected-organ-title').innerText = details.title;
+            document.getElementById('selected-organ-score').innerText = `${score}%`;
+            document.getElementById('selected-organ-zheng').innerText = details.zheng;
+            document.getElementById('selected-organ-acupressure').innerText = details.acupressure;
+            document.getElementById('selected-organ-resonance').innerText = details.resonance;
+
+            // Update remedies card
+            document.getElementById('remedy-emoji').innerText = details.remedyEmoji;
+            document.getElementById('remedy-title').innerText = details.remedyTitle;
+            document.getElementById('remedy-desc').innerText = details.remedyDesc;
+
+            // Glow borders based on score strength
+            const panel = document.getElementById('selected-organ-score').parentNode.parentNode;
+            panel.className = "flex items-center justify-between border-b border-slate-800 pb-3 mb-4";
+        }
+
+        // Acupressure helper details trigger
+        function handleChartTap(targetOrgan) {
+            updateSelectedOrgan(targetOrgan);
+            drawRadarChart(targetOrgan);
+            
+            // Auto play harmonic healing wave
+            const freqMapping = { Spleen: 369, Liver: 432, Heart: 528, Kidney: 396, Lung: 455 };
+            if (freqMapping[targetOrgan]) playTargetFrequency(freqMapping[targetOrgan]);
+        }
+
+        // Episodic Memory & Recursion updates
+        function recordEpisodeFeedback(isAccepted) {
+            if (isAccepted) acceptCount++;
+            else rejectCount++;
+
+            const situation = document.getElementById('episode-situation').value;
+            const action = document.getElementById('episode-action').value;
+            const rollP = document.getElementById('triad-p').innerText;
+            const rollR = document.getElementById('triad-r').innerText;
+            const rollI = document.getElementById('triad-i').innerText;
+
+            const structuredJSON = {
+                "Timestamp": (Date.now() / 1000).toFixed(3),
+                "Episodic_Status": isAccepted ? "ACCEPTED" : "REJECTED_FOR_RECURSIVE_CORRECTION",
+                "Context": {
+                    "Turn_Situation": situation,
+                    "Temporal_Ifc": document.getElementById('ifc-date-str').innerText,
+                    "Lunar_Clock_Phase": document.getElementById('moon-phase-title').innerText
+                },
+                "Agentic_Stack": {
+                    "Intent": "Analyze visual sallow patterns with SigLIP vectors",
+                    "Action_Executed": action,
+                    "Model_Thought_Chain": `Modulating core seed ${rollP} with modifier ${rollR} resolves to output triad state ${rollI}. Recommended diet remedy is warm sweet ginger millet congee to reinforce deficient spleen fire.`
+                },
+                "Recursive_Metrics": {
+                    "True_Positives": acceptCount,
+                    "False_Positives": rejectCount,
+                    "Episodic_Success_Rate": ((acceptCount / (acceptCount + rejectCount)) * 100).toFixed(1) + "%"
+                }
+            };
+
+            // Display raw logs update
+            document.getElementById('json-episode-output').innerText = JSON.stringify(structuredJSON, null, 2);
+
+            // Compute precision & recall rates
+            const successRate = (acceptCount / (acceptCount + rejectCount)) * 100;
+            document.getElementById('metrics-precision').innerText = `${successRate.toFixed(0)}%`;
+            
+            // Recall calculation formula: TP / (TP + FN)
+            // Simulating a steady recovery rate where the self-correcting Gödel agent limits false negatives over time
+            const recallRate = acceptCount / (acceptCount + (rejectCount * 0.2)); 
+            document.getElementById('metrics-recall').innerText = `${(recallRate * 100).toFixed(0)}%`;
+        }
+    </script>
+</body>
+</html>

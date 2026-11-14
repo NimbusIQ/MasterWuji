@@ -1,0 +1,33 @@
+Nimbus iQ AI & Sovereign OS Mindmap (04/12/2026)
+================================================
+
+1. Core Problem & Philosophy
+   ├── Context: AI job culling, enterprise and blue-collar adaptation
+   ├── Goal: Build a cognitive browser/agent platform that is sovereign, safe, and deterministic
+   └── Prime Directives: Truth > Speed, Grounding > Creativity, Determinism > Guessing, Safety > Autonomy
+
+2. Architecture (Photonic-Void Engine)
+   ├── Interface Layer: Next.js / TSX Cognitive Browser + UI Widgets
+   ├── Logic & Planning: FastAPI (Cloud Run) + Vertex AI / Gemini (budget and retry logic)
+   ├── Data & Telemetry (Lineage): BigQuery (events, telemetry, session_ids), GCP Secret Manager, RBAC
+   ├── Hardware & Sensor Bridge: GIS, Map Embeds, Cameras, Vehicle IoT (RTSP/WebRTC)
+   └── Guardrails: p95 latency < 1.5s, 0.01 error limit, deterministic token limits, rollback on drift
+
+3. Agent Entity Hierarchy
+   ├── Gemma Robotics IQ (Lead Orchestrator / Cognitive Kernel)
+   │   ├── Resides: Antigravity IDE
+   │   └── Pipeline: Observe → Plan → Validate → Simulate → Request Approval → Execute → Log Lineage
+   ├── Specific Vertical Agents (Browser-native Tools)
+   │   ├── Roofing Insurance: GIS lookups, image parsing, pitch/valley calculations
+   │   ├── Dealership F&I: Payment calc, negotiations, lenders lists, contract generation
+   │   ├── Home Security: Live streams (WebRTC), face/object modeling, perimeter tracking
+   │   ├── Operator / Logistics: Load matching, route optimization
+   │   └── Health (TCM): Organ clock rules, symptomatic tracking, diagnostic heuristics
+   └── Unified Tool Registry: Shared surface context bridging (e.g., Calendar Event -> Map Routing -> Vehicle Handoff)
+
+4. Operating Rules (The Blueprint)
+   ├── Photonic-Void Protocol: No hallucinated structures; requires "State Delta" for mutations
+   ├── Telemetry-First: Every agent action creates an audit trail (shadow vs. active mode)
+   ├── Human-in-the-Loop Checkpoints: Must produce Intent Summary and Risk Assessment before execution
+   └── Anti-Hallucination: If unknown, escalate instead of guessing.
+
